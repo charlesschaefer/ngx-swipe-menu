@@ -13,5 +13,14 @@
   "sideEffects": false,
   "devDependencies": {
     "@types/hammerjs": "^2.0.46"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/charlesschaefer/ngx-swipe-menu.git"
+  },
+  "author": {
+    "email": "charlesschaefer@gmail.com",
+    "name": "Charles Schaefer",
+    "url": "https://charlesschaefer.net"
   }
 }

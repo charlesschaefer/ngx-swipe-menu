@@ -1,6 +1,15 @@
 {
   "name": "angular-library",
-  "version": "0.0.0",
+  "version": "0.0.1",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/charlesschaefer/ngx-swipe-menu.git"
+  },
+  "author": {
+    "email": "charlesschaefer@gmail.com",
+    "name": "Charles Schaefer",
+    "url": "https://charlesschaefer.net"
+  },
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
