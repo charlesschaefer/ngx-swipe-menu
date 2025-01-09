@@ -15,7 +15,10 @@
   } @else {
   @for (action of actions; track action.name) {
   <div class="ng-swipe-action-button ng-swipe-action-button-{{action.name}}" [ngClass]="action.class">
-    <button (click)="action.onClick($event, action.data)" [ngClass]="action.class">{{action.label}}</button>
+    <button (click)="action.onClick($event, action.data)" [ngClass]="action.class">
+      <i [class]="action.icon" *nfIf="action.icon"></i>
+      {{action.label}}
+    </button>
   </div>
   }
   }
