@@ -52,11 +52,11 @@ export class NgxSwipeMenuComponent {
    */
   @Input() data: any;
   /**
-   * An event emitted when the swipe gesture is finished and the actions menu is openned.
+   * An event emitted when the swipe gesture is finished and the actions menu is opened.
    * The first argument passed to the listener function is the data provided for this item
    * @event
    */
-  @Output() menuOpenned = new EventEmitter();
+  @Output() menuOpened = new EventEmitter();
   /**
    * An event emitted when the actions menu is closed.
    * The first argument passed to the listener function is the data provided for this item
@@ -167,7 +167,7 @@ export class NgxSwipeMenuComponent {
 
   constructor(private el: ElementRef) {
     this.menuClosed.subscribe(() => this.el.nativeElement.querySelector(".ngx-swipe-menu").classList.remove('open'));
-    this.menuOpenned.subscribe(() => this.el.nativeElement.querySelector(".ngx-swipe-menu").classList.add('open'));
+    this.menuOpened.subscribe(() => this.el.nativeElement.querySelector(".ngx-swipe-menu").classList.add('open'));
   }
 
   onSwipeLeftAction(event: MouseEvent) {
@@ -232,7 +232,7 @@ export class NgxSwipeMenuComponent {
     };
 
     if (this.enableSwipeLeft && -event.deltaX >= this.minSwipeDistance) {
-      this.menuOpenned.emit(this.data);
+      this.menuOpened.emit(this.data);
 
       if (this.showSwipeLeftActions) {
         const distance = this.swipeLeftActionsContainerElement?.getBoundingClientRect().width || this.minSwipeDistance + 10;
@@ -247,7 +247,7 @@ export class NgxSwipeMenuComponent {
     }
 
     if (this.enableSwipeRight && event.deltaX >= this.minSwipeDistance) {
-      this.menuOpenned.emit(this.data);
+      this.menuOpened.emit(this.data);
 
       if (this.showSwipeRightActions) {
         const distance = this.swipeRightActionsContainerElement?.getBoundingClientRect().width || this.minSwipeDistance + 10;

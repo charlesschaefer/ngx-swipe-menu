@@ -124,8 +124,8 @@ This can be usefull to identify the item in a list of "swappable" items.
 - **data**:
 > The data provided here will be sent in the second argument of all the event listeners
 
-- **menuOpenned** (event):
-> An event emitted when the swipe gesture is finished and the actions menu is openned. 
+- **menuOpened** (event):
+> An event emitted when the swipe gesture is finished and the actions menu is opened. 
 > The first argument passed to the listener function is the data provided for this item
 
 - **menuClosed** (event):
