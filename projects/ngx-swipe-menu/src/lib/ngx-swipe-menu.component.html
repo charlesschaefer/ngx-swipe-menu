@@ -1,0 +1,22 @@
+<div class="ngx-swipe-menu">
+  <div class="ngx-swipe-menu-content" (panmove)="onPanMove($event)" (panend)="onPanEnd($event)"
+    (panstart)="onPanStart($event)">
+    <ng-content></ng-content>
+  </div>
+  <div class="ng-swipe-actions-container">
+    <ng-container *ngTemplateOutlet="actionsTemplate || originalActions"></ng-container>
+  </div>
+</div>
+<ng-template #originalActions>
+  @if (!actions) {
+  <div class="ng-swipe-action-edit ng-swipe-action-button">
+    <button (click)="buttonAction($event)">Edit</button>
+  </div>
+  } @else {
+  @for (action of actions; track action.name) {
+  <div class="ng-swipe-action-button ng-swipe-action-button-{{action.name}}" [ngClass]="action.class">
+    <button (click)="action.onClick($event, action.data)" [ngClass]="action.class">{{action.label}}</button>
+  </div>
+  }
+  }
+</ng-template>
