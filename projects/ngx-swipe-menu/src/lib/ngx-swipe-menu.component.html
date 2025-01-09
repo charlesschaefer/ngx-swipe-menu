@@ -1,6 +1,6 @@
 <div class="ngx-swipe-menu">
-  <div class="ngx-swipe-menu-content" (panmove)="onPanMove($event)" (panend)="onPanEnd($event)"
-    (panstart)="onPanStart($event)">
+  <div class="ngx-swipe-menu-content" (panmove)="onSwipeMove($event)" (panend)="onSwipeEnd($event)"
+    (panstart)="onSwipeStart($event)">
     <ng-content></ng-content>
   </div>
   <div class="ng-swipe-actions-container">
@@ -8,18 +8,23 @@
   </div>
 </div>
 <ng-template #originalActions>
-  @if (!actions) {
-  <div class="ng-swipe-action-edit ng-swipe-action-button">
-    <button (click)="buttonAction($event)">Edit</button>
-  </div>
+  @if (!showSwipeActions) {
+    <div class="ng-swipe-action-label">
+      <span *ngIf="swipeActionLabel">{{swipeActionLabel}}</span>
+      <i *ngIf="swipeActionIcon" [ngClass]="swipeActionIcon"></i>
+    </div>
+  } @else if (!swipeActions) {
+    <div class="ng-swipe-action-edit ng-swipe-action-button">
+      <button (click)="onSwipeLeftAction($event)">Edit</button>
+    </div>
   } @else {
-  @for (action of actions; track action.name) {
-  <div class="ng-swipe-action-button ng-swipe-action-button-{{action.name}}" [ngClass]="action.class">
-    <button (click)="action.onClick($event, action.data)" [ngClass]="action.class">
-      <i [class]="action.icon" *nfIf="action.icon"></i>
-      {{action.label}}
-    </button>
-  </div>
-  }
+    @for (action of swipeActions; track action.name) {
+      <div class="ng-swipe-action-button ng-swipe-action-button-{{action.name}}" [ngClass]="action.class">
+        <button (click)="action.onClick($event, action.data ?? data)">
+          <i [class]="action.icon" *ngIf="action.icon"></i>
+          {{action.label}}
+        </button>
+      </div>
+    }
   }
 </ng-template>

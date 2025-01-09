@@ -38,7 +38,6 @@
   padding-right: 10px;
   z-index: 99;
   min-height: 3ex;
-  /* visibility: hidden; */
   background-color: #dee3ed;
   display: flex;
   align-items: inherit;
