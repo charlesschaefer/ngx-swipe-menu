@@ -1,6 +1,6 @@
 {
   "name": "ngx-swipe-menu",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "type": "module",
   "peerDependencies": {
     "@angular/common": "^19.0.0",
@@ -18,9 +18,10 @@
     "type": "git",
     "url": "git+https://github.com/charlesschaefer/ngx-swipe-menu.git"
   },
-  "author": {
-    "email": "charlesschaefer@gmail.com",
-    "name": "Charles Schaefer",
-    "url": "https://charlesschaefer.net"
-  }
+  "author": "Charles Schaefer <charlesschaefer@gmail.com> (https://charlesschaefer.net)",
+  "description": "A component to create \"swipe left to 'action'\" experiences.",
+  "bugs": {
+    "url": "https://github.com/charlesschaefer/ngx-swipe-menu/issues"
+  },
+  "homepage": "https://github.com/charlesschaefer/ngx-swipe-menu#readme"
 }

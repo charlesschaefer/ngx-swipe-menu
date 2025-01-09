@@ -1,6 +1,6 @@
 {
   "name": "angular-library",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/charlesschaefer/ngx-swipe-menu.git"
@@ -16,7 +16,8 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "lint": "ng lint"
+    "lint": "ng lint",
+    "bump-version": "npm version patch --no-git-tag-version --workspaces=true --include-workspace-root"
   },
   "private": true,
   "dependencies": {
@@ -48,5 +49,8 @@
     "ng-packagr": "^19.0.0",
     "typescript": "~5.6.2",
     "typescript-eslint": "8.18.0"
-  }
+  },
+  "workspaces": [
+    "projects/ngx-swipe-menu"
+  ]
 }
