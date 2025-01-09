@@ -114,6 +114,59 @@ This can be usefull to identify the item in a list of "swappable" items.
 <!-- ... -->
 ```
 
+## Custom buttons from ts code
+
+```js
+// ...
+import { NgxSwipeMenuComponent, SwipeMenuActions } from 'ngx-swipe-menu';
+
+// ...
+@Component({
+    imports: [
+        // ...
+        NgxSwipeMenuComponent,
+    ],
+    // ...
+})
+export class MyComponent {
+  // ...
+  swipeActionItems = [
+    {
+      name: 'edit',
+      icon: 'fa-pencil',
+      class: 'action-edit-button',
+      onClick: (event: any, data: any) => {
+          console.log("Edit action with data: ", data);
+      }
+    },
+    {
+      name: 'delete',
+      label: "Delete",
+      class: 'action-edit-button',
+      data: 'This data overwrites the generic data provided to the component',
+      onClick: (event: any, data: any) => {
+          console.log("Delete action with data: ", data);
+      }
+    }
+  ] as SwipeMenuActions[];
+
+  items = ["Item 1", "Item 2"];
+  // ...
+}
+```
+
+```html
+<!-- ... -->
+<ul>
+  @for (itemData of items; track itemData) {
+    <ngx-swipe-menu [data]="itemData" [swipeLeftActions]="swipeActionItems">
+      <li>{{itemData}}</li>
+    </ngx-swipe-menu>
+  }
+</ul>
+<!-- ... -->
+```
+
 
 # Component inputs and outputs/events
 
@@ -179,6 +232,6 @@ This can be usefull to identify the item in a list of "swappable" items.
 
 - **swipeRightDefaultAction** (event):
 > An event emitted when the user clicks the default button of the swipeRight
-> gesture, when showSwipeLeftActions=true, or else when finished the swipeRight gesture.
+> gesture, when showSwipeRightActions=true, or else when finished the swipeRight gesture.
 > The first argument passed to the listener function is the data provided for this item
    
