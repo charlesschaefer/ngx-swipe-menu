@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, ContentChild, ElementRef, EventEmitter, Input, Output, TemplateRef } from '@angular/core';
 import { DIRECTION_LEFT } from 'hammerjs';
+import { provideSwipeMenu } from './ngx-swipe-menu.config';
 
 export interface SwipeMenuActions {
   name: string;
@@ -17,7 +18,10 @@ export interface SwipeMenuActions {
   imports: [CommonModule],
   templateUrl: './ngx-swipe-menu.component.html',
   styleUrl: './ngx-swipe-menu.component.css',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [
+    provideSwipeMenu()
+  ]
 })
 export class NgxSwipeMenuComponent {
   @Input() actions: SwipeMenuActions[] | undefined;
