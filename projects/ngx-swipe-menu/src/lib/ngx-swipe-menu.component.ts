@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, ContentChild, ElementRef, EventEmitter, Input, Output, TemplateRef } from '@angular/core';
-import { DIRECTION_LEFT } from 'hammerjs';
+import { DIRECTION_LEFT, DIRECTION_RIGHT } from 'hammerjs';
 import { provideSwipeMenu } from './ngx-swipe-menu.config';
 
 export interface SwipeMenuActions {
@@ -65,31 +65,31 @@ export class NgxSwipeMenuComponent {
   @Output() menuClosed = new EventEmitter();
 
 
-  /**
-   * Defines if the menu actions buttons must be showed. If alse, when the user finishes
-   * the swipe gesture we emit the defaultAction event
-   * @default true
-   */
-  @Input() showSwipeActions = true;
-  /**
-   * A list of SwipeMenuActions structure to configure the menu actions that must be showed
-   */
-  @Input() swipeActions: SwipeMenuActions[] | undefined;
-  /**
-   * The label to be showed when action buttons are deactivated
-   */
-  @Input() swipeActionLabel?: string;
-  /**
-   * The classes to be applied when when action buttons are deactivated
-   */
-  @Input() swipeActionIcon?: string;
-  /**
-   * An event emitted when the user clicks the default button of the defined swipe
-   * gesture, when showSwipeActions=true, or else when finished the default swipe gesture.
-   * The first argument passed to the listener function is the data provided for this item
-   * @event
-   */
-  @Output() defaultAction: EventEmitter<MouseEvent> = new EventEmitter<MouseEvent>();
+  // /**
+  //  * Defines if the menu actions buttons must be showed. If alse, when the user finishes
+  //  * the swipe gesture we emit the defaultAction event
+  //  * @default true
+  //  */
+  // @Input() showSwipeActions = true;
+  // /**
+  //  * A list of SwipeMenuActions structure to configure the menu actions that must be showed
+  //  */
+  // @Input() swipeActions: SwipeMenuActions[] | undefined;
+  // /**
+  //  * The label to be showed when action buttons are deactivated
+  //  */
+  // @Input() swipeActionLabel?: string;
+  // /**
+  //  * The classes to be applied when when action buttons are deactivated
+  //  */
+  // @Input() swipeActionIcon?: string;
+  // /**
+  //  * An event emitted when the user clicks the default button of the defined swipe
+  //  * gesture, when showSwipeActions=true, or else when finished the default swipe gesture.
+  //  * The first argument passed to the listener function is the data provided for this item
+  //  * @event
+  //  */
+  // @Output() defaultAction: EventEmitter<MouseEvent> = new EventEmitter<MouseEvent>();
 
 
   /**
@@ -135,7 +135,7 @@ export class NgxSwipeMenuComponent {
    * the swipeRight gesture we emit the defaultSwipeRightAction event
    * @default true
    */
-  @Input() showSwipeRightActions = false;
+  @Input() showSwipeRightActions = true;
   /**
    * A list of SwipeMenuActions structure to configure the menu actions that must be showed
    * when the user swipes right
@@ -158,9 +158,11 @@ export class NgxSwipeMenuComponent {
   @Output() swipeRightDefaultAction = new EventEmitter<MouseEvent>();
 
 
-  @ContentChild('actions', { descendants: false }) protected actionsTemplate: TemplateRef<any> | null = null;
+  @ContentChild('swipeLeftActions', { descendants: false }) protected swipeLeftActionsTemplate: TemplateRef<any> | null = null;
+  @ContentChild('swipeRightActions', { descendants: false }) protected swipeRightActionsTemplate: TemplateRef<any> | null = null;
 
-  private actionsContainerElement?: HTMLElement;
+  private swipeLeftActionsContainerElement?: HTMLElement;
+  private swipeRightActionsContainerElement?: HTMLElement;
   private contentElement?: HTMLElement;
 
   constructor(private el: ElementRef) {
@@ -171,28 +173,46 @@ export class NgxSwipeMenuComponent {
   onSwipeLeftAction(event: MouseEvent) {
     this.reset();
 
-    this.defaultAction?.emit(this.data);
     this.swipeLeftDefaultAction?.emit(this.data);
   }
 
-  onSwipeStart(_event: any) {
+  onSwipeRightAction(event: MouseEvent) {
+    this.reset();
+
+    this.swipeRightDefaultAction?.emit(this.data);
+  }
+
+  onSwipeStart(event: any) {
     // resets the position of all menu containers
     document.querySelectorAll<HTMLElement>('.ngx-swipe-menu').forEach(element => {
       this.reset(element);
     });
 
-    this.actionsContainerElement = this.el.nativeElement.querySelector(".ng-swipe-actions-container");
+    if (this.enableSwipeLeft) {
+      this.swipeLeftActionsContainerElement = this.el.nativeElement.querySelector(".ng-swipe-left-actions-container");
+    }
+    if (this.enableSwipeRight) {
+      this.swipeRightActionsContainerElement = this.el.nativeElement.querySelector(".ng-swipe-right-actions-container");
+    }
+
     this.contentElement = this.el.nativeElement.querySelector(".ngx-swipe-menu-content");
 
-    this.contentElement?.classList.add('active');
+    if (this.enableSwipeRight && event.direction == DIRECTION_RIGHT || this.enableSwipeLeft && event.direction == DIRECTION_LEFT) {
+      this.contentElement?.classList.add('active');
+    }
   }
 
   onSwipeMove(event: any) {
     const element = this.contentElement ?? event.target;
 
-    if (event.direction == DIRECTION_LEFT && event.deltaX < 0 && event.deltaX < -this.minSwipeDistance) {
-      const distance = Math.min(Math.abs(event.deltaX), this.actionsContainerElement?.getBoundingClientRect().width || this.minSwipeDistance + 10);
+    if (this.enableSwipeLeft && event.direction == DIRECTION_LEFT && event.deltaX < 0 && event.deltaX < -this.minSwipeDistance) {
+      const distance = Math.min(Math.abs(event.deltaX), this.swipeLeftActionsContainerElement?.getBoundingClientRect().width || this.minSwipeDistance + 10);
       element.style.transform = `translateX(-${distance}px)`;
+    }
+
+    if (this.enableSwipeRight && event.direction == DIRECTION_RIGHT && event.deltaX > 0 && event.deltaX > this.minSwipeDistance) {
+      const distance = Math.min(Math.abs(event.deltaX), this.swipeRightActionsContainerElement?.getBoundingClientRect().width || this.minSwipeDistance + 10);
+      element.style.transform = `translateX(${distance}px)`;
     }
   }
 
@@ -201,31 +221,44 @@ export class NgxSwipeMenuComponent {
 
     const element = this.contentElement ?? event.target;
 
-    if (-event.deltaX >= this.minSwipeDistance) {
+    // setup a listener to close the menu when clicking somewhere in the page
+    const listener = (event: Event) => {
+      const doc = element;
+      if (doc !== this.el.nativeElement) {
+        document.removeEventListener('click', listener);
+        this.reset();
+        this.menuClosed.emit(this.data);
+      }
+    };
+
+    if (this.enableSwipeLeft && -event.deltaX >= this.minSwipeDistance) {
       this.menuOpenned.emit(this.data);
 
-      if (this.showSwipeActions) {
-        const distance = this.actionsContainerElement?.getBoundingClientRect().width || this.minSwipeDistance + 10;
+      if (this.showSwipeLeftActions) {
+        const distance = this.swipeLeftActionsContainerElement?.getBoundingClientRect().width || this.minSwipeDistance + 10;
         element.style.transform = `translateX(-${distance}px)`;
 
-        // setup a listener to close the menu when clicking somewhere in the page
-        const listener = (event: Event) => {
-          const doc = element;
-          if (doc !== this.el.nativeElement) {
-            document.removeEventListener('click', listener);
-            this.reset();
-            this.menuClosed.emit(this.data);
-          }
-        };
         setTimeout(() => document.addEventListener('click', listener), 50);
       } else {
         this.reset();
         this.menuClosed.emit(this.data);
-        this.defaultAction?.emit(this.data);
         this.swipeLeftDefaultAction.emit(this.data);
       }
+    }
 
+    if (this.enableSwipeRight && event.deltaX >= this.minSwipeDistance) {
+      this.menuOpenned.emit(this.data);
 
+      if (this.showSwipeRightActions) {
+        const distance = this.swipeRightActionsContainerElement?.getBoundingClientRect().width || this.minSwipeDistance + 10;
+        element.style.transform = `translateX(${distance}px)`;
+
+        setTimeout(() => document.addEventListener('click', listener), 50);
+      } else {
+        this.reset();
+        this.menuClosed.emit(this.data);
+        this.swipeRightDefaultAction.emit(this.data);
+      }
     }
   }
 
@@ -239,6 +272,5 @@ export class NgxSwipeMenuComponent {
     void (content ? content.style.transform = '' : null);
 
     this.contentElement?.classList.remove('active');
-
   }
 }

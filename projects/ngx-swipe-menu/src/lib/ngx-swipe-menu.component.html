@@ -3,23 +3,47 @@
     (panstart)="onSwipeStart($event)">
     <ng-content></ng-content>
   </div>
-  <div class="ng-swipe-actions-container">
-    <ng-container *ngTemplateOutlet="actionsTemplate || originalActions"></ng-container>
+  <div class="ng-swipe-left-actions-container">
+    <ng-container *ngTemplateOutlet="swipeLeftActionsTemplate || originalSwipeLeftActions"></ng-container>
+  </div>
+  <div class="ng-swipe-right-actions-container">
+    <ng-container *ngTemplateOutlet="swipeRightActionsTemplate || originalSwipeRightActions"></ng-container>
   </div>
 </div>
-<ng-template #originalActions>
-  @if (!showSwipeActions) {
-    <div class="ng-swipe-action-label">
-      <span *ngIf="swipeActionLabel">{{swipeActionLabel}}</span>
-      <i *ngIf="swipeActionIcon" [ngClass]="swipeActionIcon"></i>
+<ng-template #originalSwipeLeftActions>
+  @if (!showSwipeLeftActions) {
+    <div class="ng-swipe-left-action-label">
+      <span *ngIf="swipeLeftActionLabel">{{swipeLeftActionLabel}}</span>
+      <i *ngIf="swipeLeftActionIcon" [ngClass]="swipeLeftActionIcon"></i>
     </div>
-  } @else if (!swipeActions) {
-    <div class="ng-swipe-action-edit ng-swipe-action-button">
+  } @else if (!swipeLeftActions) {
+    <div class="ng-swipe-left-action-edit ng-swipe-left-action-button">
       <button (click)="onSwipeLeftAction($event)">Edit</button>
     </div>
   } @else {
-    @for (action of swipeActions; track action.name) {
-      <div class="ng-swipe-action-button ng-swipe-action-button-{{action.name}}" [ngClass]="action.class">
+    @for (action of swipeLeftActions; track action.name) {
+      <div class="ng-swipe-left-action-button ng-swipe-left-action-button-{{action.name}}" [ngClass]="action.class">
+        <button (click)="action.onClick($event, action.data ?? data)">
+          <i [class]="action.icon" *ngIf="action.icon"></i>
+          {{action.label}}
+        </button>
+      </div>
+    }
+  }
+</ng-template>
+<ng-template #originalSwipeRightActions>
+  @if (!showSwipeRightActions) {
+    <div class="ng-swipe-right-action-label">
+      <span *ngIf="swipeRightActionLabel">{{swipeRightActionLabel}}</span>
+      <i *ngIf="swipeRightActionIcon" [ngClass]="swipeRightActionIcon"></i>
+    </div>
+  } @else if (!swipeRightActions) {
+    <div class="ng-swipe-right-action-edit ng-swipe-right-action-button">
+      <button (click)="onSwipeRightAction($event)">Edit</button>
+    </div>
+  } @else {
+    @for (action of swipeRightActions; track action.name) {
+      <div class="ng-swipe-right-action-button ng-swipe-right-action-button-{{action.name}}" [ngClass]="action.class">
         <button (click)="action.onClick($event, action.data ?? data)">
           <i [class]="action.icon" *ngIf="action.icon"></i>
           {{action.label}}
