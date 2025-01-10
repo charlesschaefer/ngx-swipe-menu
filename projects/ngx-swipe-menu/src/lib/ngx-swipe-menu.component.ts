@@ -170,13 +170,13 @@ export class NgxSwipeMenuComponent {
     this.menuOpened.subscribe(() => this.el.nativeElement.querySelector(".ngx-swipe-menu").classList.add('open'));
   }
 
-  onSwipeLeftAction(event: MouseEvent) {
+  onSwipeLeftAction(_event: MouseEvent) {
     this.reset();
 
     this.swipeLeftDefaultAction?.emit(this.data);
   }
 
-  onSwipeRightAction(event: MouseEvent) {
+  onSwipeRightAction(_event: MouseEvent) {
     this.reset();
 
     this.swipeRightDefaultAction?.emit(this.data);
@@ -222,7 +222,7 @@ export class NgxSwipeMenuComponent {
     const element = this.contentElement ?? event.target;
 
     // setup a listener to close the menu when clicking somewhere in the page
-    const listener = (event: Event) => {
+    const listener = (_event: Event) => {
       const doc = element;
       if (doc !== this.el.nativeElement) {
         document.removeEventListener('click', listener);
