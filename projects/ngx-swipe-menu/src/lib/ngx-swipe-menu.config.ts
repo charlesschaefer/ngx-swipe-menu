@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { HAMMER_GESTURE_CONFIG, HammerGestureConfig } from "@angular/platform-browser";
-import { DIRECTION_LEFT } from 'hammerjs';
+import { DIRECTION_HORIZONTAL } from 'hammerjs';
 
 @Injectable()
 export class SwipeMenuConfig extends HammerGestureConfig {
@@ -9,7 +9,7 @@ export class SwipeMenuConfig extends HammerGestureConfig {
     'rotate': { enable: false },
     'swipe': { enable: false },
     'pan': {
-        direction: DIRECTION_LEFT
+        direction: DIRECTION_HORIZONTAL
     }
    } as any;
 }
